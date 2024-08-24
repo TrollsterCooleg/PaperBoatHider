@@ -1,0 +1,7 @@
+name: BoatHider
+version: '${version}'
+main: me.cooleg.paperboathider.PaperBoatHider
+api-version: '1.20'
+load: STARTUP
+depend:
+  - CommandAPI
