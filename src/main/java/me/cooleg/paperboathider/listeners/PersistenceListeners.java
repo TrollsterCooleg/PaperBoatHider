@@ -1,9 +1,8 @@
-package me.cooleg.paperboathider;
+package me.cooleg.paperboathider.listeners;
 
+import me.cooleg.paperboathider.nms.NmsJunk;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
@@ -26,7 +25,7 @@ public class PersistenceListeners implements Listener {
     public void worldLoadEvent(WorldLoadEvent event) {
         for (Chunk chunk : event.getWorld().getLoadedChunks()) {
             for (Boat boat : Arrays.stream(chunk.getEntities())
-                    .filter(entity -> entity.getType() == EntityType.BOAT)
+                    .filter(entity -> entity.getType().getKey().getKey().contains("BOAT"))
                     .map((entity -> (Boat) entity))
                     .toList()) {
                 replaceBoat(boat);
@@ -37,7 +36,7 @@ public class PersistenceListeners implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void chunkLoadEvent(ChunkLoadEvent event) {
         for (Boat boat : Arrays.stream(event.getChunk().getEntities())
-                .filter(entity -> entity.getType() == EntityType.BOAT)
+                .filter(entity -> entity.getType().getKey().getKey().contains("BOAT"))
                 .map((entity -> (Boat) entity))
                 .toList()) {
             replaceBoat(boat);
@@ -57,14 +56,7 @@ public class PersistenceListeners implements Listener {
     }
 
     private void replaceBoat(Boat boat) {
-        Boat newBoat = NmsJunk.spawnBoat(boat.getLocation());
-        newBoat.setBoatType(boat.getBoatType());
-
-        for (Entity passenger : boat.getPassengers()) {
-            newBoat.addPassenger(passenger);
-        }
-
-        boat.remove();
+        NmsJunk.replaceBoat(boat);
     }
 
 }

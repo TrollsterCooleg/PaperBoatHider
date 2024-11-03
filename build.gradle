@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("io.papermc.paperweight.userdev") version "1.7.4"
 }
 
 group = 'me.cooleg'
@@ -13,11 +13,16 @@ repositories {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
     }
+    maven {
+        name "neonRepositoryReleases"
+        url "https://repo.superneon4ik.me/releases"
+    }
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.3-R0.1-SNAPSHOT")
     compileOnly "dev.jorel:commandapi-bukkit-core:9.5.3"
+    compileOnly "me.superneon4ik:NoxesiumUtils:2.0.0"
 }
 
 def targetJavaVersion = 21

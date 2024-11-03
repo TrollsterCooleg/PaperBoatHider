@@ -1,4 +1,4 @@
-package me.cooleg.paperboathider;
+package me.cooleg.paperboathider.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -17,11 +17,21 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class BoatListeners implements Listener {
 
+    private NoxesiumUtilsHook hook;
     private final JavaPlugin plugin;
     private boolean hiding = false;
 
     public BoatListeners(JavaPlugin plugin) {
         this.plugin = plugin;
+
+        try {
+            Class.forName("me.superneon4ik.noxesiumutils.NoxesiumUtils");
+
+            hook = new NoxesiumUtilsHook(this);
+            Bukkit.getPluginManager().registerEvents(hook, plugin);
+        } catch (ClassNotFoundException e) {
+            hook = null;
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -108,7 +118,7 @@ public class BoatListeners implements Listener {
             public void run() {
                 if (!player.isInsideVehicle()) {return;}
                 for (Entity entity : player.getWorld().getEntitiesByClass(Boat.class)) {
-                    if (entity.getPassengers().size() != 0 && !entity.getPassengers().contains(player) && entity != boat) {
+                    if (!entity.getPassengers().isEmpty() && !entity.getPassengers().contains(player) && entity != boat) {
                         hideEntity(player, entity);
                         for (Entity riding : entity.getPassengers()) {
                             hideEntity(player, riding);
@@ -120,6 +130,7 @@ public class BoatListeners implements Listener {
     }
 
     public void hideEntity(Player target, Entity hidden) {
+        if (hook != null && hook.canShowSafely(target)) {return;}
         target.hideEntity(plugin, hidden);
     }
 
