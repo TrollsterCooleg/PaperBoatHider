@@ -17,6 +17,10 @@ repositories {
         name "neonRepositoryReleases"
         url "https://repo.superneon4ik.me/releases"
     }
+    maven {
+        name "noxcrewMaven"
+        url "https://maven.noxcrew.com/public"
+    }
 }
 
 dependencies {
